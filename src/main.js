@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session, shell, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, session, shell, Menu, systemPreferences } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -98,7 +98,17 @@ app.on('web-contents-created', (_event, contents) => {
     if (permission === 'notifications') return notificationsAllowedFor(contents.session);
     return allowed.has(permission);
   };
-  contents.session.setPermissionRequestHandler((_wc, permission, callback) => callback(decide(permission)));
+  contents.session.setPermissionRequestHandler(async (_wc, permission, callback, details) => {
+    // macOS gibt Mikrofon/Kamera nur frei, wenn die App die Systemabfrage
+    // (TCC-Dialog) selbst auslöst – ohne das schlagen Sprach-/Videoanrufe
+    // z. B. in Discord kommentarlos fehl.
+    if (permission === 'media' && process.platform === 'darwin') {
+      const types = details?.mediaTypes || ['audio', 'video'];
+      if (types.includes('audio')) await systemPreferences.askForMediaAccess('microphone').catch(() => {});
+      if (types.includes('video')) await systemPreferences.askForMediaAccess('camera').catch(() => {});
+    }
+    callback(decide(permission));
+  });
   contents.session.setPermissionCheckHandler((_wc, permission) => decide(permission));
 });
 

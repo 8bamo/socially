@@ -3,15 +3,37 @@
 Alle deine Social-Media- und Messenger-Dienste in **einer portablen App** – inspiriert von Franz/Ferdium.
 Socially lädt die offiziellen Webversionen (z. B. WhatsApp Web, Telegram Web, Discord, Instagram …) und hält sie sauber voneinander getrennt.
 
+## Download
+
+Die fertige App gibt es auf der [**Releases-Seite**](https://github.com/8bamo/socially/releases/latest):
+
+| System | Datei |
+|---|---|
+| 🍎 Mac mit Apple Silicon (M1/M2/M3/M4) | `Socially-<version>-mac-arm64.dmg` |
+| 🍎 Mac mit Intel-Prozessor | `Socially-<version>-mac-x64.dmg` |
+| 🪟 Windows (portabel, keine Installation) | `Socially-Portable-<version>.exe` |
+
+**Welchen Mac habe ich?** Apple-Menü  → „Über diesen Mac“ – steht bei „Chip“ (Apple = arm64) oder „Prozessor“ (Intel = x64).
+
+### Erster Start auf dem Mac
+
+Die App ist nicht über den App Store verifiziert. Beim ersten Öffnen daher:
+**Rechtsklick auf die App → „Öffnen“ → im Dialog nochmal „Öffnen“ bestätigen.** Danach startet sie ganz normal per Doppelklick.
+
+### Erster Start auf Windows
+
+Einfach die EXE doppelklicken – keine Installation nötig. Falls der SmartScreen-Hinweis kommt: „Weitere Informationen“ → „Trotzdem ausführen“.
+
 ## Features
 
 - ➕ **Beliebig viele Dienste** – 16 vordefinierte Dienste im Katalog + eigene Dienste per URL
-- 🧳 **Portabel** – eine einzelne EXE, alle Daten liegen im Ordner `SociallyData` daneben (USB-Stick-tauglich, nichts in `%APPDATA%` oder der Registry)
+- 🧳 **Portabel** – alle Daten liegen im Ordner `SociallyData` neben der App (USB-Stick-tauglich)
 - 🎨 **Hell- & Dunkelmodus** – Dunkel, Hell oder automatisch dem System folgen (⚙ Darstellung)
 - 🔀 **Schneller Wechsel** – Tabs links in der Seitenleiste oder unten mittig (umschaltbar), Dienste bleiben im Hintergrund geladen
 - 🔴 **Ungelesen-Badges** – roter Zähler mit weißer Zahl am Dienst-Icon, sobald neue Nachrichten da sind
 - 🎵 **Benachrichtigungston pro App** – Ding, Pop, Glocke, Chime, Trill oder kein Ton, für jeden Dienst einzeln wählbar
-- 🔔 **Benachrichtigungen steuerbar** – global an/aus, einzelne Dienste stummschalten (kein Ton, keine Benachrichtigungen)
+- 🔔 **Benachrichtigungen steuerbar** – global an/aus, einzelne Dienste stummschalten (kein Ton, keine Benachrichtigungen) – auch direkt beim Hinzufügen eines Dienstes
+- 📞 **Anrufe** – Mikrofon- und Kamerazugriff für Sprach- und Videoanrufe (z. B. Discord, WhatsApp)
 - 🔒 **Privacy Mode** – optionaler Passwortschutz, der die ganze App sperrt (beim Start, per 🔒-Button oder Strg+L; Passwort als SHA-256-Hash mit Salt gespeichert)
 - 🚀 **Autostart** – optional automatisch beim Hochfahren starten
 - 🖱 **Rechtsklick auf einen Dienst**: neu laden, stummschalten, Daten löschen, Dienst entfernen
@@ -24,41 +46,6 @@ Socially lädt die offiziellen Webversionen (z. B. WhatsApp Web, Telegram Web, D
 - 🌐 **Externe Links** öffnen im Standardbrowser, nie in der App.
 - 🧹 **Volle Kontrolle:** Daten pro Dienst jederzeit löschbar; beim Entfernen eines Dienstes werden seine Daten mitgelöscht.
 - 🕵️ **Neutrale Browser-Kennung:** Die App meldet sich als normaler Chrome, ohne Electron-/App-Kennung.
-
-## Entwicklung
-
-```bash
-npm install     # Abhängigkeiten installieren
-npm start       # App im Entwicklungsmodus starten
-```
-
-Im Entwicklungsmodus liegen die Daten in `./SociallyData` im Projektordner.
-
-## Builds
-
-### Windows (portable EXE)
-
-```bash
-npm run dist:win
-```
-
-Ergebnis: `release/Socially-Portable-1.0.0.exe` – eine einzelne Datei, die ohne Installation läuft.
-Beim ersten Start legt sie neben sich den Ordner `SociallyData` an. EXE + Ordner zusammen kopieren = App inklusive aller Logins umziehen.
-
-### macOS (DMG, Apple Silicon + Intel)
-
-macOS-Builds können **nur auf einem Mac** erstellt werden (Vorgabe von Apple/electron-builder). Zwei Wege:
-
-1. **Auf einem Mac:** Projektordner rüberkopieren, dann `npm install && npm run dist:mac` → `release/Socially-1.0.0-mac-arm64.dmg` (Apple Silicon) und `…-x64.dmg` (Intel).
-2. **Ohne Mac – GitHub Actions:** Projekt in ein GitHub-Repo pushen → Tab „Actions" → Workflow „Build Socially" → „Run workflow". GitHub baut dann Mac **und** Windows in der Cloud; die fertigen Dateien hängen als Artefakte am Lauf. (Workflow liegt in `.github/workflows/build.yml`.)
-
-Hinweis: Die DMGs sind unsigniert – beim ersten Öffnen auf dem Mac Rechtsklick → „Öffnen" wählen.
-
-## Technik
-
-- Electron (Chromium) mit `<webview>`-Tags, eine persistente Partition pro Dienst
-- UI: reines HTML/CSS/JS, keine externen Laufzeit-Abhängigkeiten
-- `contextIsolation` an, `nodeIntegration` aus, schmale IPC-Brücke via Preload
 
 ---
 

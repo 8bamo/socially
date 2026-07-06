@@ -212,7 +212,7 @@ function addService({ name, url, color, letter, icon }) {
     color: color || colorFor(name),
     letter: letter || name.trim().charAt(0).toUpperCase() || '?',
     icon: icon || null,
-    muted: false,
+    muted: document.getElementById('add-muted').checked,
     sound: 'ding'
   };
   config.services.push(svc);
@@ -238,8 +238,13 @@ function buildCatalog() {
   }
 }
 
-document.getElementById('add-btn').addEventListener('click', () => addDialog.showModal());
-document.getElementById('settings-add-btn').addEventListener('click', () => addDialog.showModal());
+function openAddDialog() {
+  document.getElementById('add-muted').checked = false;
+  addDialog.showModal();
+}
+
+document.getElementById('add-btn').addEventListener('click', openAddDialog);
+document.getElementById('settings-add-btn').addEventListener('click', openAddDialog);
 document.getElementById('add-cancel').addEventListener('click', () => addDialog.close());
 
 document.getElementById('custom-form').addEventListener('submit', (e) => {

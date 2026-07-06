@@ -1,7 +1,7 @@
 {
   "name": "socially",
   "productName": "Socially",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Socially by mystu – alle deine Social-Media- und Messenger-Dienste in einer portablen App.",
   "author": "mystu <mystushop@gmail.com>",
   "license": "MIT",
@@ -24,6 +24,7 @@
     "directories": {
       "output": "release"
     },
+    "afterPack": "build/afterPack.js",
     "files": [
       "src/**/*",
       "package.json"
@@ -57,7 +58,14 @@
       ],
       "icon": "build/icon.png",
       "category": "public.app-category.social-networking",
-      "artifactName": "Socially-${version}-mac-${arch}.${ext}"
+      "artifactName": "Socially-${version}-mac-${arch}.${ext}",
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSCameraUsageDescription": "Socially benötigt Kamerazugriff, damit du in den eingebundenen Diensten (z. B. Discord, WhatsApp) an Videoanrufen teilnehmen kannst.",
+        "NSMicrophoneUsageDescription": "Socially benötigt Mikrofonzugriff, damit du in den eingebundenen Diensten (z. B. Discord, WhatsApp) an Anrufen teilnehmen kannst."
+      }
     }
   }
 }
