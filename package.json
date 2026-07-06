@@ -1,0 +1,63 @@
+{
+  "name": "socially",
+  "productName": "Socially",
+  "version": "1.0.0",
+  "description": "Socially by mystu – alle deine Social-Media- und Messenger-Dienste in einer portablen App.",
+  "author": "mystu <mystushop@gmail.com>",
+  "license": "MIT",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win portable",
+    "dist:dir": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "simple-icons": "^16.25.0"
+  },
+  "build": {
+    "appId": "de.mystu.socially",
+    "productName": "Socially",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "Socially-Portable-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "Socially-Portable-${version}.exe"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.social-networking",
+      "artifactName": "Socially-${version}-mac-${arch}.${ext}"
+    }
+  }
+}

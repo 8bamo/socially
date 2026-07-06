@@ -1,0 +1,42 @@
+# Baut Socially für macOS und Windows in der GitHub-Cloud.
+# Auslösen: manuell über den "Actions"-Tab (workflow_dispatch) oder per Git-Tag "v*".
+# Die fertigen Dateien liegen danach als Artefakte am Workflow-Lauf.
+name: Build Socially
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  mac:
+    name: macOS (dmg, arm64 + x64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run dist:mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Socially-mac
+          path: |
+            release/*.dmg
+            release/*-mac-*.zip
+
+  windows:
+    name: Windows (portable EXE)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run dist:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Socially-windows-portable
+          path: release/*.exe

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:;" />
+  <title>Socially by mystu</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="layout">
+    <!-- Seitenleiste / Bottom-Bar mit den Diensten -->
+    <nav id="sidebar">
+      <div id="brand" title="Socially by mystu">S</div>
+      <div id="service-list"></div>
+      <div id="sidebar-actions">
+        <button id="add-btn" title="Dienst hinzufügen">+</button>
+        <button id="lock-btn" title="Socially sperren" hidden>🔒</button>
+        <button id="settings-btn" title="Einstellungen">⚙</button>
+      </div>
+    </nav>
+
+    <!-- Hauptbereich: Webviews der Dienste -->
+    <main id="content">
+      <div id="welcome">
+        <div class="welcome-logo">S</div>
+        <h1><span>Socially</span> by mystu</h1>
+        <p>Alle deine Social-Media- und Messenger-Dienste in einer portablen App.</p>
+        <p class="hint">Klicke auf <strong>+</strong>, um deinen ersten Dienst hinzuzufügen.</p>
+      </div>
+      <div id="views"></div>
+    </main>
+  </div>
+
+  <!-- ============================ Einstellungen ============================ -->
+  <div id="settings-overlay" hidden>
+    <div id="settings-panel">
+      <header id="settings-header">
+        <span>⚙ Einstellungen</span>
+        <button id="settings-close" title="Schließen">✕</button>
+      </header>
+      <div id="settings-body">
+        <nav id="settings-nav">
+          <button class="nav-item active" data-section="general">Allgemein</button>
+          <button class="nav-item" data-section="services">Dienste <span id="svc-count" class="count"></span></button>
+          <button class="nav-item" data-section="appearance">Darstellung</button>
+          <button class="nav-item" data-section="privacy">Datenschutz &amp; Sicherheit</button>
+        </nav>
+        <div id="settings-content">
+
+          <!-- Allgemein -->
+          <section data-section="general" class="active">
+            <h2>Allgemein</h2>
+            <label class="setting-row">
+              <input type="checkbox" id="set-notifications" />
+              <span>Benachrichtigungen erlauben (global)</span>
+            </label>
+            <p class="setting-hint">Einzelne Dienste kannst du unter „Dienste" oder per Rechtsklick stummschalten.</p>
+            <label class="setting-row">
+              <input type="checkbox" id="set-autostart" />
+              <span>Socially beim Hochfahren automatisch starten</span>
+            </label>
+          </section>
+
+          <!-- Dienste -->
+          <section data-section="services">
+            <div class="section-head">
+              <h2>Deine Dienste</h2>
+              <button id="settings-add-btn" class="primary">+ Dienst hinzufügen</button>
+            </div>
+            <div id="service-cards"></div>
+          </section>
+
+          <!-- Darstellung -->
+          <section data-section="appearance">
+            <h2>Darstellung</h2>
+            <h3>Design</h3>
+            <label class="setting-row"><input type="radio" name="theme" value="dark" /><span>🌙 Dunkel</span></label>
+            <label class="setting-row"><input type="radio" name="theme" value="light" /><span>☀️ Hell</span></label>
+            <label class="setting-row"><input type="radio" name="theme" value="system" /><span>💻 System folgen</span></label>
+            <h3>Navigation</h3>
+            <label class="setting-row"><input type="radio" name="nav-pos" value="left" /><span>Tabs links in der Seitenleiste</span></label>
+            <label class="setting-row"><input type="radio" name="nav-pos" value="bottom" /><span>Tabs unten mittig</span></label>
+          </section>
+
+          <!-- Datenschutz & Sicherheit -->
+          <section data-section="privacy">
+            <h2>Datenschutz &amp; Sicherheit</h2>
+
+            <h3>🔒 Privacy Mode</h3>
+            <label class="setting-row">
+              <input type="checkbox" id="set-privacy" />
+              <span>Passwortschutz aktivieren – sperrt die ganze App</span>
+            </label>
+            <div id="privacy-setup" hidden>
+              <input type="password" id="pw-new" placeholder="Passwort" autocomplete="off" />
+              <input type="password" id="pw-confirm" placeholder="Passwort wiederholen" autocomplete="off" />
+              <button id="pw-save" class="primary">Privacy Mode aktivieren</button>
+              <p class="setting-hint error" id="pw-error" hidden></p>
+            </div>
+            <div id="privacy-disable" hidden>
+              <input type="password" id="pw-disable" placeholder="Passwort zur Bestätigung" autocomplete="off" />
+              <button id="pw-disable-btn" class="primary">Privacy Mode deaktivieren</button>
+              <p class="setting-hint error" id="pw-disable-error" hidden>Falsches Passwort.</p>
+            </div>
+            <div id="privacy-active" hidden>
+              <button id="lock-now" class="primary">Jetzt sperren</button>
+              <p class="setting-hint">Zum Deaktivieren Haken entfernen – dein Passwort wird dann abgefragt. Beim Start ist Socially gesperrt.</p>
+            </div>
+            <p class="setting-hint">Hinweis: Der Privacy Mode sperrt den Zugriff auf die App-Oberfläche. Die lokalen Daten im Ordner <code>SociallyData</code> selbst sind nicht verschlüsselt.</p>
+
+            <h3>Deine Daten</h3>
+            <ul class="privacy-list">
+              <li><strong>Isolierte Sessions:</strong> jeder Dienst in eigener Partition – kein dienstübergreifendes Tracking.</li>
+              <li><strong>100 % lokal &amp; portabel:</strong> alles liegt in <code id="data-dir"></code>. Keine Cloud, keine Telemetrie, kein Konto.</li>
+              <li><strong>Restriktive Berechtigungen:</strong> nur Benachrichtigungen, Mikrofon/Kamera und Vollbild.</li>
+              <li><strong>Externe Links</strong> öffnen im Standardbrowser.</li>
+              <li><strong>Volle Kontrolle:</strong> Daten pro Dienst jederzeit löschbar (unter „Dienste" oder per Rechtsklick).</li>
+            </ul>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= Dienst hinzufügen ========================== -->
+  <dialog id="add-dialog">
+    <h2>Dienst hinzufügen</h2>
+    <div id="catalog-grid"></div>
+    <h3>Eigener Dienst</h3>
+    <form id="custom-form">
+      <input type="text" id="custom-name" placeholder="Name (z. B. Mein Forum)" required />
+      <input type="url" id="custom-url" placeholder="https://…" required />
+      <div class="dialog-actions">
+        <button type="button" class="secondary" id="add-cancel">Abbrechen</button>
+        <button type="submit" class="primary">Hinzufügen</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============================ Kontextmenü ============================= -->
+  <div id="ctx-menu" hidden>
+    <button data-action="reload">↻ Neu laden</button>
+    <button data-action="mute" id="ctx-mute">🔕 Stummschalten</button>
+    <button data-action="clear">🧹 Daten dieses Dienstes löschen</button>
+    <button data-action="remove" class="danger">🗑 Dienst entfernen (inkl. Daten)</button>
+  </div>
+
+  <!-- ====================== Privacy Mode: Sperrbildschirm ================= -->
+  <div id="lock-screen" hidden>
+    <div class="lock-box">
+      <div class="welcome-logo">S</div>
+      <h1>Socially ist gesperrt</h1>
+      <p>Gib dein Passwort ein, um fortzufahren.</p>
+      <form id="unlock-form">
+        <input type="password" id="pw-unlock" placeholder="Passwort" autocomplete="off" autofocus />
+        <button type="submit" class="primary">Entsperren</button>
+      </form>
+      <p class="setting-hint error" id="unlock-error" hidden>Falsches Passwort.</p>
+    </div>
+  </div>
+
+  <script src="icons.js"></script>
+  <script src="catalog.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
