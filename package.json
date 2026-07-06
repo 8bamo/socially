@@ -8,9 +8,9 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win portable",
-    "dist:mac": "electron-builder --mac",
-    "dist:win": "electron-builder --win portable",
+    "dist": "electron-builder --win portable --publish never",
+    "dist:mac": "electron-builder --mac --publish never",
+    "dist:win": "electron-builder --win portable --publish never",
     "dist:dir": "electron-builder --dir"
   },
   "devDependencies": {
