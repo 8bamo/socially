@@ -583,6 +583,9 @@ document.addEventListener('keydown', (e) => {
 
   if (config.services.length > 0) {
     activate(config.services[0].id);
+    // Übrige Dienste direkt im Hintergrund vorladen (unsichtbar), damit der
+    // Wechsel zu ihnen später ohne Wartezeit geht statt erst beim ersten Klick.
+    for (const svc of config.services.slice(1)) ensureWebview(svc);
   } else {
     render();
   }

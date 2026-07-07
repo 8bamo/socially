@@ -87,7 +87,6 @@ button { font-family: inherit; }
 }
 .service-btn:hover { transform: scale(1.08); }
 .service-btn.active { box-shadow: 0 0 0 2px var(--sidebar), 0 0 0 4px var(--accent); }
-.service-btn.muted { opacity: .5; }
 
 /* Markenlogos (weißes SVG auf farbiger Kachel) */
 .brand-icon { width: 24px; height: 24px; display: block; }
