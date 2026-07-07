@@ -9,5 +9,6 @@ contextBridge.exposeInMainWorld('socially', {
   getDataDir: () => ipcRenderer.invoke('app:dataDir'),
   clearServiceData: (partition) => ipcRenderer.invoke('service:clearData', partition),
   setAutostart: (enable) => ipcRenderer.invoke('app:setAutostart', enable),
-  openExternal: (url) => ipcRenderer.invoke('app:openExternal', url)
+  openExternal: (url) => ipcRenderer.invoke('app:openExternal', url),
+  checkForUpdate: () => ipcRenderer.invoke('app:checkForUpdate')
 });

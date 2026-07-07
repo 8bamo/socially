@@ -589,4 +589,21 @@ document.addEventListener('keydown', (e) => {
   } else {
     render();
   }
+
+  checkForUpdate();
 })();
+
+// ------------------------------ Update-Hinweis ------------------------------
+
+async function checkForUpdate() {
+  const update = await window.socially.checkForUpdate();
+  if (!update) return;
+  document.getElementById('update-version').textContent = 'v' + update.version;
+  document.getElementById('update-open').addEventListener('click', () => {
+    window.socially.openExternal(update.url);
+  });
+  document.getElementById('update-dismiss').addEventListener('click', () => {
+    document.getElementById('update-banner').hidden = true;
+  });
+  document.getElementById('update-banner').hidden = false;
+}

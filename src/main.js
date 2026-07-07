@@ -151,6 +151,39 @@ ipcMain.handle('app:openExternal', (_event, url) => {
   if (url.startsWith('https://') || url.startsWith('http://')) shell.openExternal(url);
 });
 
+// --------------------------- Update-Prüfung --------------------------------
+// Kein Auto-Update: die App ist nicht notarisiert und Windows läuft als
+// portable EXE, ein automatischer Download/Tausch wäre bei vielen Nutzern
+// durch Gatekeeper/SmartScreen blockiert. Stattdessen nur ein Hinweis mit
+// Link zur GitHub-Release-Seite, der Download bleibt manuell.
+const REPO = '8bamo/socially';
+
+function isNewerVersion(latest, current) {
+  const a = latest.split('.').map(Number);
+  const b = current.split('.').map(Number);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const x = a[i] || 0, y = b[i] || 0;
+    if (x !== y) return x > y;
+  }
+  return false;
+}
+
+ipcMain.handle('app:checkForUpdate', async () => {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
+      headers: { Accept: 'application/vnd.github+json' }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const latest = String(data.tag_name || '').replace(/^v/, '');
+    const current = app.getVersion();
+    if (!latest || !isNewerVersion(latest, current)) return null;
+    return { version: latest, url: data.html_url };
+  } catch {
+    return null; // z. B. kein Internet – Update-Hinweis einfach auslassen
+  }
+});
+
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => app.quit());
